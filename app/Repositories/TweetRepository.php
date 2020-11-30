@@ -7,6 +7,7 @@ namespace App\Repositories;
 
 
 use App\Models\Tweet;
+use Illuminate\Support\Facades\DB;
 
 class TweetRepository
 {
@@ -31,6 +32,25 @@ class TweetRepository
     public function findById(int $tweetId)
     {
         return $this->tweet->where('id', $tweetId)->first();
+    }
+
+    public function update(int $tweetId, array $data)
+    {
+        return $this->tweet->where('id', $tweetId)->update($data);
+    }
+
+    public function insert(array $data)
+    {
+        return DB::table('tweets')->insert(array_values($data));
+    }
+
+    public function publish(int $tweetId)
+    {
+        return $this->tweet->where('id', $tweetId)->update(
+            [
+                'is_published' => true,
+            ]
+        );
     }
 
 }

@@ -35,4 +35,5 @@ Route::group(
 
 Route::get('/tweets', [TweetController::class, 'index']);
 Route::get('/tweets/{tweetId}', [TweetController::class, 'show']);
-Route::get('/tweets/publish/{tweetId}', [TweetController::class, 'publish']);
+Route::put('/tweets/{tweet}', [TweetController::class, 'update']);
+Route::put('/tweets/{tweet}/publish', [TweetController::class, 'publish']);
