@@ -61,4 +61,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this::where('email', $this->email)->where('email_active', 1)->exists();
     }
+
+    public function tweet()
+    {
+        return $this->hasMany(Tweet::class);
+    }
+
 }

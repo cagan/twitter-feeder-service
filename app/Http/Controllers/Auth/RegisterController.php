@@ -11,6 +11,7 @@ use App\Http\Requests\RegisterVerifyRequest;
 use App\Notifications\ActivateSignup;
 use App\Repositories\UserRepository;
 use App\Services\ActivationCodeService;
+use App\Services\TweetService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +27,7 @@ class RegisterController extends AuthController
         $this->activationCode = $activationCode;
     }
 
-    public function register(RegisterRequest $request, UserRepository $userRepository)
+    public function register(RegisterRequest $request, UserRepository $userRepository, TweetService $tweet)
     {
         try {
             DB::beginTransaction();
@@ -43,6 +44,8 @@ class RegisterController extends AuthController
 
             $activationCode = $this->activationCode->generate($user);
             $user->notify(new ActivateSignup($user, $activationCode));
+            $tweet->loadTweets($user->id, 20);
+
             DB::commit();
 
             return response()->json(
@@ -84,7 +87,8 @@ class RegisterController extends AuthController
             [
                 'status' => 'error',
                 'message' => 'Can not verify account with activation code',
-            ]
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
         );
     }
 

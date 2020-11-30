@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\TweetController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,3 +32,7 @@ Route::group(
         Route::post('/register/activate/{id}/{activation_token}', [RegisterController::class, 'verifyAccount']);
     }
 );
+
+Route::get('/tweets', [TweetController::class, 'index']);
+Route::get('/tweets/{tweetId}', [TweetController::class, 'show']);
+Route::get('/tweets/publish/{tweetId}', [TweetController::class, 'publish']);

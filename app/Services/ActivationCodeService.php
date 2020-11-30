@@ -48,7 +48,6 @@ class ActivationCodeService
     public function activate(string $userId, string $activationCode)
     {
         $valid = $this->validate($userId, $activationCode);
-
         if (!$valid) {
             return false;
         }
