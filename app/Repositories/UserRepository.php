@@ -29,4 +29,8 @@ class UserRepository
         }
     }
 
+    public function findBy(int $id)
+    {
+        return User::where('id', $id)->first();
+    }
 }

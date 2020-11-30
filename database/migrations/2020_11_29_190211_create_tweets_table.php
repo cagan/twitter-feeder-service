@@ -17,6 +17,7 @@ class CreateTweetsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->text('twitter_text');
+            $table->integer('likes')->default(0);
             $table->boolean('is_published')->default(false);
             $table->foreign('user_id')->on('users')->references('id')->cascadeOnDelete();
             $table->timestamps();

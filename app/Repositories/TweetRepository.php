@@ -18,9 +18,14 @@ class TweetRepository
         $this->tweet = $tweet;
     }
 
-    public function getByUserId(int $userId)
+    public function getAllTweets(int $limit = 10, string $order = 'DESC')
     {
-        return $this->tweet->where('user_id', $userId)->get();
+        return $this->tweet->orderBy('created_at', $order)->paginate($limit);
+    }
+
+    public function getTweetByUserId(int $userId, string $order = 'DESC', int $limit = 10)
+    {
+        return $this->tweet->where('user_id', $userId)->orderBy('created_at', $order)->paginate($limit);
     }
 
     public function findById(int $tweetId)

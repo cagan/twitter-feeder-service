@@ -32,21 +32,4 @@ class ClientTest extends TestCase
         $this->assertCount(100, array_column($tweets, 'user_id'));
     }
 
-    /** @test */
-    public function it_should_convert_data_with_user_ids()
-    {
-        $clientService = new TwitterClient(new Client());
-        $tweets = $clientService->get('/tweets');
-        $userId = 1;
-
-        for ($i = 0; $i < count($tweets); $i += 20) {
-            for ($j = $i; $j < $i + 20; $j++) {
-                $tweets[$j]['user_id'] = $userId;
-            }
-            $userId++;
-        }
-
-        $content = file_put_contents('tweets.json', json_encode($tweets));
-
-    }
 }
