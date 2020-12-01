@@ -6,12 +6,9 @@ use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Vonage\Client;
-use Vonage\Client\Credentials\Basic;
 
 class ActivateSignup extends Notification
 {
-
     use Queueable;
 
     private User $user;
@@ -33,7 +30,8 @@ class ActivateSignup extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'nexmo'];
+        // Add nexmo if you have nexmo credentials
+        return ['mail'];
     }
 
     /**
@@ -47,7 +45,7 @@ class ActivateSignup extends Notification
     {
         $url = url("/api/auth/register/activate/{$notifiable->id}/{$notifiable->activation_token}");
 
-        return (new MailMessage)->markdown(
+        return (new MailMessage())->markdown(
             'signupactivation',
             [
                 'user' => $this->user,
@@ -59,18 +57,17 @@ class ActivateSignup extends Notification
 
     public function toNexmo($notifiable)
     {
-        dd('hello');
-        $basic = new Basic('c527aecd', 'xQ1MAcvMj3yKP3nT');
-        $client = new Client($basic);
-
-        $message = $client->message()->send(
-            [
-                'to' => '905434816161',
-                'from' => 'Vonage APIs',
-                'text' => 'Hello from Vonage SMS API',
-            ]
-        );
-
+//        $basic = new Basic('c527aecd', 'xQ1MAcvMj3yKP3nT');
+//        $client = new Client($basic);
+//
+//        $message = $client->message()->send(
+//            [
+//                'to' => '905434816161',
+//                'from' => 'Vonage APIs',
+//                'text' => 'Hello from Vonage SMS API',
+//            ]
+//        );
+//
 //        return (new NexmoMessage())->content('Your register has been received');
     }
 
@@ -87,5 +84,4 @@ class ActivateSignup extends Notification
             //
         ];
     }
-
 }

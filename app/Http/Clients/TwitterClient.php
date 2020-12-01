@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace App\Http\Clients;
-
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -34,5 +32,4 @@ class TwitterClient implements ClientInterface
             throw new \Exception($e->getMessage());
         }
     }
-
 }

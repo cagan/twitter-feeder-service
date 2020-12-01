@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace App\Http\Controllers\Auth;
-
 
 class LogoutController extends AuthController
 {
@@ -20,5 +18,4 @@ class LogoutController extends AuthController
             200
         );
     }
-
 }

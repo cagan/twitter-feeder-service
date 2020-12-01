@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-
 use App\Models\Tweet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

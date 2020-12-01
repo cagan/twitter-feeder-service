@@ -43,5 +43,4 @@ class RegisterVerifyRequest extends MainRequest
             'activation_code' => 'required'
         ];
     }
-
 }

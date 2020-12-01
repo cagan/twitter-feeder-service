@@ -2,28 +2,21 @@
 
 declare(strict_types=1);
 
-
 namespace App\Http\Controllers\Auth;
 
-
 use App\Http\Controllers\Controller;
+use App\Services\TokenServiceInterface;
 
 abstract class AuthController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware(['auth', 'signed', 'auth:api'], ['except' => ['login', 'register', 'verifyAccount']]);
-    }
+    protected $tokenService;
 
-    public function refresh()
+    public function __construct(TokenServiceInterface $tokenService)
     {
-        return $this->createNewToken(auth()->refresh());
-    }
+        $this->middleware(['auth:api'], ['except' => ['login', 'register', 'verifyAccount']]);
 
-    public function userProfile()
-    {
-        return response()->json(auth()->user());
+        $this->tokenService = $tokenService;
     }
 
     protected function createNewToken(string $token)
@@ -32,10 +25,21 @@ abstract class AuthController extends Controller
             [
                 'access_token' => $token,
                 'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60,
+                'expires_in' => $this->tokenService->createToken(),
                 'user' => auth()->user(),
             ]
         );
     }
 
+    public function refresh()
+    {
+        $this->createNewToken(auth()->refresh());
+
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Token refreshed successfully',
+            ]
+        );
+    }
 }

@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-
 namespace App\Http\Controllers\Auth;
-
 
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Redis;
 
 class LoginController extends AuthController
 {
@@ -24,7 +23,7 @@ class LoginController extends AuthController
             );
         }
 
-        if (!auth()->user()->isActivated()) {
+        if (!auth()->user()->isEmailActivated()) {
             return response()->json(
                 [
                     'status' => 'auth_error',
@@ -36,5 +35,4 @@ class LoginController extends AuthController
 
         return $this->createNewToken((string)$token);
     }
-
 }

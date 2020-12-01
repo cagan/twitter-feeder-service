@@ -20,7 +20,7 @@ class UserActivation
     {
         $email = $request->get('email');
 
-        if (auth()->user()->isActivated()) {
+        if (auth()->user()->isEmailActivated()) {
             throw new UserNotActivatedException();
         }
 

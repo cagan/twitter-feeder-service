@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-
 namespace App\Services;
-
 
 use App\Http\Clients\ClientInterface;
 use App\Repositories\TweetRepository;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class TweetService
+class TweetService implements TweetServiceInterface
 {
 
     private ClientInterface $client;
@@ -24,7 +21,7 @@ class TweetService
         $this->tweetRepository = $tweetRepository;
     }
 
-    public function loadTweets(int $userId, int $amount)
+    public function loadTweets(int $userId, int $amount): void
     {
         try {
             $tweets = $this->client->get('/tweets');
@@ -49,9 +46,8 @@ class TweetService
         }
     }
 
-    public function publishTweet(int $tweetId)
+    public function publishTweet(int $tweetId): bool
     {
         return $this->tweetRepository->publish($tweetId);
     }
-
 }

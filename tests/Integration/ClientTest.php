@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-
 use App\Http\Clients\TwitterClient;
 use GuzzleHttp\Client;
 use Tests\TestCase;
@@ -31,5 +30,4 @@ class ClientTest extends TestCase
 
         $this->assertCount(100, array_column($tweets, 'user_id'));
     }
-
 }

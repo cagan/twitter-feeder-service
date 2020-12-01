@@ -28,5 +28,4 @@ class TweetResource extends JsonResource
             'user' => UserResource::make($user),
         ];
     }
-
 }

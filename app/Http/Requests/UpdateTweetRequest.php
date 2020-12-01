@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 class UpdateTweetRequest extends MainRequest
 {
 
@@ -27,5 +26,4 @@ class UpdateTweetRequest extends MainRequest
             'twitter_text' => 'required|min:10|max:80',
         ];
     }
-
 }

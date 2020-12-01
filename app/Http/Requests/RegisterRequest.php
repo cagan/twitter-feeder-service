@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 class RegisterRequest extends MainRequest
 {
 
@@ -31,5 +30,4 @@ class RegisterRequest extends MainRequest
             'twitter_address' => 'required|unique:users',
         ];
     }
-
 }

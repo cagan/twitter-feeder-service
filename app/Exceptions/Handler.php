@@ -2,14 +2,12 @@
 
 namespace App\Exceptions;
 
-use Cassandra\Exception\UnauthorizedException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -102,5 +100,4 @@ class Handler extends ExceptionHandler
             JsonResponse::HTTP_UNAUTHORIZED
         );
     }
-
 }

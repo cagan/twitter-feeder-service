@@ -9,8 +9,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -57,7 +57,7 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function isActivated()
+    public function isEmailActivated()
     {
         return $this::where('email', $this->email)->where('email_active', 1)->exists();
     }
@@ -66,5 +66,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Tweet::class);
     }
-
 }

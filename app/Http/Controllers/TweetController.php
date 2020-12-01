@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PublishTweetRequest;
 use App\Http\Requests\UpdateTweetRequest;
 use App\Http\Resources\TweetCollection;
+use App\Http\Resources\TweetResource;
 use App\Models\Tweet;
 use App\Repositories\TweetRepository;
 use App\Repositories\UserRepository;
@@ -48,26 +49,21 @@ class TweetController extends Controller
         return new TweetCollection($tweets);
     }
 
-    public function show($tweetId, TweetRepository $repository)
+    public function show(int $tweetId, TweetRepository $repository)
     {
-        $feed = $repository->findById($tweetId);
+        $tweet = $repository->findById($tweetId);
 
-        if (!$feed) {
+        if (!$tweet) {
             return response()->json(
                 [
                     'status' => 'error',
-                    'message' => 'Feed not found with this id.',
+                    'message' => 'Tweet not found with this id.',
                 ],
                 JsonResponse::HTTP_BAD_REQUEST
             );
         }
 
-        return response()->json(
-            [
-                'status' => 'success',
-                'data' => $feed,
-            ]
-        );
+        return new TweetResource($tweet);
     }
 
     public function update(Tweet $tweet, UpdateTweetRequest $request, TweetRepository $repository)
@@ -120,5 +116,4 @@ class TweetController extends Controller
             ]
         );
     }
-
 }

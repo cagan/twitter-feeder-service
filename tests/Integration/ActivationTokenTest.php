@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-
 use App\Models\ActivationCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -78,5 +77,4 @@ class ActivationTokenTest extends TestCase
             ]
         );
     }
-
 }

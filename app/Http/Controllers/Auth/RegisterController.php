@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
-
 namespace App\Http\Controllers\Auth;
-
 
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\RegisterVerifyRequest;
 use App\Notifications\ActivateSignup;
 use App\Repositories\UserRepository;
 use App\Services\ActivationCodeService;
-use App\Services\TweetService;
+use App\Services\TweetServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -21,13 +19,16 @@ class RegisterController extends AuthController
 
     private ActivationCodeService $activationCode;
 
-    public function __construct(ActivationCodeService $activationCode)
+    private TweetServiceInterface $tweetService;
+
+    public function __construct(ActivationCodeService $activationCode, TweetServiceInterface $tweetService)
     {
         parent::__construct();
         $this->activationCode = $activationCode;
+        $this->tweetService = $tweetService;
     }
 
-    public function register(RegisterRequest $request, UserRepository $userRepository, TweetService $tweet)
+    public function register(RegisterRequest $request, UserRepository $userRepository)
     {
         try {
             DB::beginTransaction();
@@ -42,9 +43,11 @@ class RegisterController extends AuthController
                 )
             );
 
-            $activationCode = $this->activationCode->generate($user);
-            $user->notify(new ActivateSignup($user, $activationCode));
-            $tweet->loadTweets($user->id, 20);
+            if (null !== $user) {
+                $activationCode = $this->activationCode->generate($user);
+                $user->notify(new ActivateSignup($user, $activationCode));
+                $this->tweetService->loadTweets($user->id, 20);
+            }
 
             DB::commit();
 
@@ -91,7 +94,4 @@ class RegisterController extends AuthController
             JsonResponse::HTTP_UNPROCESSABLE_ENTITY
         );
     }
-
 }
-
-

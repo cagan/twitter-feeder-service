@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 class LoginRequest extends MainRequest
 {
     /**
@@ -27,5 +26,4 @@ class LoginRequest extends MainRequest
             'password' => 'required|string|min:6',
         ];
     }
-
 }
