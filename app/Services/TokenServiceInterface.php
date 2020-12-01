@@ -11,5 +11,4 @@ interface TokenServiceInterface
     public function refreshToken();
 
     public function createToken(int $expireMin = 60);
-
 }

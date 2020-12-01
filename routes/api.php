@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Auth
+// Prefix: /api/auth/
 Route::group(
     [
         'middleware' => 'api',
@@ -28,7 +29,7 @@ Route::group(
         Route::post('/login', [LoginController::class, 'login']);
         Route::post('/register', [RegisterController::class, 'register']);
         Route::post('/logout', [LogoutController::class, 'logout']);
-        Route::post('/refresh', [TokenService::class, 'refresh']);
+        Route::post('/refresh', [RegisterController::class, 'refreshToken']);
         Route::post('/register/activate/{id}/{activation_token}', [RegisterController::class, 'verifyAccount']);
     }
 );

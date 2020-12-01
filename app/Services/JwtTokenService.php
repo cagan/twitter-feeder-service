@@ -14,7 +14,7 @@ class JwtTokenService implements TokenServiceInterface
             return null;
         }
 
-        return $this->createToken(auth()->refresh());
+        return auth()->refresh();
     }
 
     public function createToken(int $expireMin = 60)
@@ -25,5 +25,4 @@ class JwtTokenService implements TokenServiceInterface
 
         return auth()->factory()->getTTL() * $expireMin;
     }
-
 }

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Redis;
 
 class LoginController extends AuthController
 {
@@ -33,6 +32,6 @@ class LoginController extends AuthController
             );
         }
 
-        return $this->createNewToken((string)$token);
+        return $this->newTokenResponse((string)$token);
     }
 }

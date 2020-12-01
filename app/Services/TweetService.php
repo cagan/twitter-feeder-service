@@ -46,7 +46,7 @@ class TweetService implements TweetServiceInterface
         }
     }
 
-    public function publishTweet(int $tweetId): bool
+    public function publishTweet(int $tweetId): int
     {
         return $this->tweetRepository->publish($tweetId);
     }

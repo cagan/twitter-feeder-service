@@ -75,6 +75,7 @@ class ActivationCodeService
             DB::commit();
             return true;
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error(sprintf("Can not activate user: %s", $e->getMessage()));
             return false;
         }

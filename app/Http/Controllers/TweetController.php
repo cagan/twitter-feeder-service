@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PublishTweetRequest;
 use App\Http\Requests\UpdateTweetRequest;
 use App\Http\Resources\TweetCollection;
 use App\Http\Resources\TweetResource;
@@ -32,7 +31,7 @@ class TweetController extends Controller
             return new TweetCollection($tweets);
         }
 
-        $user = $userRepository->findBy($userId);
+        $user = $userRepository->findById($userId);
 
         if (!$user) {
             return response()->json(
@@ -95,7 +94,7 @@ class TweetController extends Controller
         );
     }
 
-    public function publish(Tweet $tweet, TweetService $tweetService, TweetRepository $repository)
+    public function publish(Tweet $tweet, TweetService $tweetService)
     {
         $this->authorize('update', $tweet);
         $isPublished = $tweetService->publishTweet($tweet->id);
@@ -105,7 +104,8 @@ class TweetController extends Controller
                 [
                     'status' => 'success',
                     'message' => 'Tweet now published in server',
-                ]
+                ],
+                JsonResponse::HTTP_OK
             );
         }
 
@@ -113,7 +113,8 @@ class TweetController extends Controller
             [
                 'status' => 'error',
                 'message' => 'Can not publish in the server',
-            ]
+            ],
+            JsonResponse::HTTP_INTERNAL_SERVER_ERROR
         );
     }
 }

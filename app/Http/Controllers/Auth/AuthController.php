@@ -10,16 +10,15 @@ use App\Services\TokenServiceInterface;
 abstract class AuthController extends Controller
 {
 
-    protected $tokenService;
+    protected TokenServiceInterface $tokenService;
 
     public function __construct(TokenServiceInterface $tokenService)
     {
         $this->middleware(['auth:api'], ['except' => ['login', 'register', 'verifyAccount']]);
-
         $this->tokenService = $tokenService;
     }
 
-    protected function createNewToken(string $token)
+    protected function newTokenResponse(string $token)
     {
         return response()->json(
             [
@@ -33,12 +32,13 @@ abstract class AuthController extends Controller
 
     public function refresh()
     {
-        $this->createNewToken(auth()->refresh());
+        $token = $this->tokenService->refreshToken();
 
         return response()->json(
             [
                 'status' => 'success',
                 'message' => 'Token refreshed successfully',
+                'token' => $token
             ]
         );
     }

@@ -9,6 +9,7 @@ use App\Http\Requests\RegisterVerifyRequest;
 use App\Notifications\ActivateSignup;
 use App\Repositories\UserRepository;
 use App\Services\ActivationCodeService;
+use App\Services\TokenServiceInterface;
 use App\Services\TweetServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -17,14 +18,17 @@ use Illuminate\Support\Facades\Log;
 class RegisterController extends AuthController
 {
 
-    private ActivationCodeService $activationCode;
+    private ActivationCodeService $activationCodeService;
 
     private TweetServiceInterface $tweetService;
 
-    public function __construct(ActivationCodeService $activationCode, TweetServiceInterface $tweetService)
-    {
-        parent::__construct();
-        $this->activationCode = $activationCode;
+    public function __construct(
+        ActivationCodeService $activationCode,
+        TweetServiceInterface $tweetService,
+        TokenServiceInterface $tokenService
+    ) {
+        parent::__construct($tokenService);
+        $this->activationCodeService = $activationCode;
         $this->tweetService = $tweetService;
     }
 
@@ -44,7 +48,7 @@ class RegisterController extends AuthController
             );
 
             if (null !== $user) {
-                $activationCode = $this->activationCode->generate($user);
+                $activationCode = $this->activationCodeService->generate($user);
                 $user->notify(new ActivateSignup($user, $activationCode));
                 $this->tweetService->loadTweets($user->id, 20);
             }
@@ -74,7 +78,7 @@ class RegisterController extends AuthController
     public function verifyAccount($userId, RegisterVerifyRequest $request)
     {
         $activationCode = $request->get('activation_code');
-        $activated = $this->activationCode->activate($userId, $activationCode);
+        $activated = $this->activationCodeService->activate($userId, $activationCode);
 
         if ($activated) {
             return response()->json(
@@ -93,5 +97,10 @@ class RegisterController extends AuthController
             ],
             JsonResponse::HTTP_UNPROCESSABLE_ENTITY
         );
+    }
+
+    public function refreshToken()
+    {
+        return parent::refresh();
     }
 }

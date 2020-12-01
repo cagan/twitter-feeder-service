@@ -20,7 +20,7 @@ class ConvertMockData extends Command
      *
      * @var string
      */
-    protected $description = 'Convert mock data for faking twitter datas';
+    protected $description = 'Convert mock data for faking twitter data';
 
     /**
      * Create a new command instance.
