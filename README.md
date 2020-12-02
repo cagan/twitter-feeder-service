@@ -1,5 +1,5 @@
 # Twitter Feeder API
-Kullanicilarin feedlerini gorebilecekleri Twitter API Web servisi.
+Kullanicilarin feedlerini gorebilecekleri Twitter Feed Web Servisi.
 
 ### Kullanilan Teknolojiler
 - Laravel 8
@@ -23,10 +23,12 @@ Email icin ise atilan emaili log dosyasina yaziyorum. Gidilmesi gereken linki ve
 
 - Ayni kullanici birden fazla login oldugunda onceki token lar expire olmuyor. Bunun icin Login asamasinda jwt token'i parse edip, Redis gibi bi memory de tuttugum tokenlari kiyaslayabilirdim.
 Ama kullandigim jwt paketinde jwt token'i parse edilemiyormus. Onun icin ekstra kod yazilip bir sekilde kontrol yapilabilir.
+
 ### Kurulum
 ``` shell
 composer install
-php artisan migrate (veritabanini bilgilerinizi .env'ye girdikten sonra)
+cp .env.example .env (veritabanini bilgilerinizi .env'ye girin)
+php artisan migrate 
 php artisan jwt:secret
 php artisan serve
 ```
