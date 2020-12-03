@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\RegisterVerifyRequest;
 use App\Notifications\ActivateSignup;
-use App\Repositories\UserRepository;
+use App\Repositories\UserRepositoryInterface;
 use App\Services\ActivationCodeService;
 use App\Services\TokenServiceInterface;
 use App\Services\TweetServiceInterface;
@@ -22,22 +22,26 @@ class RegisterController extends AuthController
 
     private TweetServiceInterface $tweetService;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         ActivationCodeService $activationCode,
         TweetServiceInterface $tweetService,
-        TokenServiceInterface $tokenService
+        TokenServiceInterface $tokenService,
+        UserRepositoryInterface $userRepository
     ) {
         parent::__construct($tokenService);
         $this->activationCodeService = $activationCode;
         $this->tweetService = $tweetService;
+        $this->userRepository = $userRepository;
     }
 
-    public function register(RegisterRequest $request, UserRepository $userRepository)
+    public function register(RegisterRequest $request)
     {
         try {
             DB::beginTransaction();
 
-            $user = $userRepository->create(
+            $user = $this->userRepository->create(
                 array_merge(
                     $request->validated(),
                     [

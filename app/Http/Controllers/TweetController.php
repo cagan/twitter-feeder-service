@@ -9,7 +9,7 @@ use App\Models\Tweet;
 use App\Repositories\TweetRepository;
 use App\Repositories\TweetRepositoryInterface;
 use App\Repositories\UserRepositoryInterface;
-use App\Services\TweetService;
+use App\Services\TweetServiceInterface;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -72,12 +72,12 @@ class TweetController extends Controller
         return new TweetResource($tweet);
     }
 
-    public function update(Tweet $tweet, UpdateTweetRequest $request, TweetRepository $repository)
+    public function update(Tweet $tweet, UpdateTweetRequest $request)
     {
         $validated = $request->validated();
         $this->authorize('update', $tweet);
 
-        $updated = $repository->update($tweet->id, $validated);
+        $updated = $this->tweetRepository->update($tweet->id, $validated);
 
         if ($updated) {
             return response()->json(
@@ -101,7 +101,7 @@ class TweetController extends Controller
         );
     }
 
-    public function publish(Tweet $tweet, TweetService $tweetService)
+    public function publish(Tweet $tweet, TweetServiceInterface $tweetService)
     {
         $this->authorize('update', $tweet);
         $isPublished = $tweetService->publishTweet($tweet->id);

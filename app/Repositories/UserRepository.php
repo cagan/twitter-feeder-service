@@ -8,7 +8,7 @@ namespace App\Repositories;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
-class UserRepository implements RepositoryInterface
+class UserRepository implements UserRepositoryInterface
 {
 
     protected User $model;
