@@ -7,7 +7,8 @@ use App\Http\Resources\TweetCollection;
 use App\Http\Resources\TweetResource;
 use App\Models\Tweet;
 use App\Repositories\TweetRepository;
-use App\Repositories\UserRepository;
+use App\Repositories\TweetRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
 use App\Services\TweetService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,23 +16,29 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class TweetController extends Controller
 {
 
-    public function __construct()
+    private TweetRepositoryInterface $tweetRepository;
+
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(TweetRepositoryInterface $tweetRepository, UserRepositoryInterface $userRepository)
     {
         $this->middleware('auth:api');
+        $this->tweetRepository = $tweetRepository;
+        $this->userRepository = $userRepository;
     }
 
-    public function index(Request $request, TweetRepository $tweetRepository, UserRepository $userRepository)
+    public function index(Request $request)
     {
         $userId = $request->query('userId');
 
         // If the user doesn't enters userId, we will show all the tweets in the system.
         if (!$userId) {
-            $tweets = $tweetRepository->getAllTweets();
+            $tweets = $this->tweetRepository->getAllTweets();
 
             return new TweetCollection($tweets);
         }
 
-        $user = $userRepository->findById($userId);
+        $user = $this->userRepository->findById($userId);
 
         if (!$user) {
             return response()->json(
@@ -43,7 +50,7 @@ class TweetController extends Controller
             );
         }
 
-        $tweets = $tweetRepository->getTweetByUserId($user->id);
+        $tweets = $this->tweetRepository->getTweetByUserId($user->id);
 
         return new TweetCollection($tweets);
     }

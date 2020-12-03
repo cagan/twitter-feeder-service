@@ -7,5 +7,5 @@ namespace App\Http\Clients;
 interface ClientInterface
 {
 
-    public function get(string $endpoint);
+    public function fetchData(string $endpoint);
 }

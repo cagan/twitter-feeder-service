@@ -24,7 +24,7 @@ class TweetService implements TweetServiceInterface
     public function loadTweets(int $userId, int $amount): void
     {
         try {
-            $tweets = $this->client->get('/tweets');
+            $tweets = $this->client->fetchData('/tweets');
 
             $userTweets = array_filter(
                 $tweets,

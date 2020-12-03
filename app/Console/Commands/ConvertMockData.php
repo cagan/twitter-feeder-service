@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Clients\TwitterClient;
+use App\Http\Clients\TwitterMockClient;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
@@ -39,8 +39,8 @@ class ConvertMockData extends Command
      */
     public function handle()
     {
-        $clientService = new TwitterClient(new Client());
-        $tweets = $clientService->get('/tweets');
+        $clientService = new TwitterMockClient(new Client());
+        $tweets = $clientService->fetchData('/tweets');
         $userId = 1;
 
         for ($i = 0; $i < count($tweets); $i += 20) {

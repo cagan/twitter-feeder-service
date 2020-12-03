@@ -8,10 +8,10 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 
-class TwitterClient implements ClientInterface
+class TwitterMockClient implements ClientInterface
 {
-
-    public const URL = "https://5fc3ca34e5c28f0016f54de6.mockapi.io/api";
+    // This is a public url so no need to use .env file
+    public const MOCK_API_URL = "https://5fc3ca34e5c28f0016f54de6.mockapi.io/api";
 
     private Client $client;
 
@@ -20,10 +20,10 @@ class TwitterClient implements ClientInterface
         $this->client = $client;
     }
 
-    public function get(string $endpoint)
+    public function fetchData(string $endpoint)
     {
         try {
-            $response = $this->client->request('GET', self::URL . $endpoint);
+            $response = $this->client->request('GET', self::MOCK_API_URL . $endpoint);
             $content = $response->getBody()->getContents();
 
             return json_decode($content, true);

@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Clients\ClientInterface;
-use App\Http\Clients\TwitterClient;
+use App\Http\Clients\TwitterMockClient;
 use App\Repositories\TweetRepository;
 use App\Repositories\TweetRepositoryInterface;
 use App\Repositories\UserRepository;
@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind(ClientInterface::class, TwitterClient::class);
+        $this->app->bind(ClientInterface::class, TwitterMockClient::class);
         $this->app->bind(TweetServiceInterface::class, TweetService::class);
         $this->app->bind(TokenServiceInterface::class, JwtTokenService::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
