@@ -7,7 +7,7 @@ namespace App\Repositories;
 use App\Models\Tweet;
 use Illuminate\Support\Facades\DB;
 
-class TweetRepository
+class TweetRepository implements TweetRepositoryInterface
 {
 
     protected Tweet $tweet;
@@ -37,7 +37,7 @@ class TweetRepository
         return $this->tweet->where('id', $tweetId)->update($data);
     }
 
-    public function insert(array $data)
+    public function create(array $data)
     {
         return DB::table('tweets')->insert(array_values($data));
     }

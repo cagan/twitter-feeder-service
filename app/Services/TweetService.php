@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Http\Clients\ClientInterface;
-use App\Repositories\TweetRepository;
+use App\Repositories\TweetRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
 class TweetService implements TweetServiceInterface
@@ -13,9 +13,9 @@ class TweetService implements TweetServiceInterface
 
     private ClientInterface $client;
 
-    private TweetRepository $tweetRepository;
+    private TweetRepositoryInterface $tweetRepository;
 
-    public function __construct(ClientInterface $client, TweetRepository $tweetRepository)
+    public function __construct(ClientInterface $client, TweetRepositoryInterface $tweetRepository)
     {
         $this->client = $client;
         $this->tweetRepository = $tweetRepository;
@@ -39,7 +39,7 @@ class TweetService implements TweetServiceInterface
                 $tweet['created_at'] = new \DateTime($date);
             }
 
-            $this->tweetRepository->insert(array_values($userTweets));
+            $this->tweetRepository->create(array_values($userTweets));
             Log::info('Registered users tweets are saved to database.');
         } catch (\Exception $e) {
             throw new \Exception(sprintf("Can not load tweets: %s", $e->getMessage()));

@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Http\Clients\ClientInterface;
 use App\Http\Clients\TwitterClient;
+use App\Repositories\TweetRepository;
+use App\Repositories\TweetRepositoryInterface;
+use App\Repositories\UserRepository;
+use App\Repositories\UserRepositoryInterface;
 use App\Services\JwtTokenService;
 use App\Services\TokenServiceInterface;
 use App\Services\TweetService;
@@ -36,5 +40,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ClientInterface::class, TwitterClient::class);
         $this->app->bind(TweetServiceInterface::class, TweetService::class);
         $this->app->bind(TokenServiceInterface::class, JwtTokenService::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(TweetRepositoryInterface::class, TweetRepository::class);
     }
 }
