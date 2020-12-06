@@ -7,13 +7,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\RegisterVerifyRequest;
 use App\Notifications\ActivateSignup;
-use App\Repositories\UserRepositoryInterface;
 use App\Services\ActivationCodeService;
+use App\Services\RegisterServiceInterface;
 use App\Services\TokenServiceInterface;
 use App\Services\TweetServiceInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class RegisterController extends AuthController
 {
@@ -22,42 +20,31 @@ class RegisterController extends AuthController
 
     private TweetServiceInterface $tweetService;
 
-    private UserRepositoryInterface $userRepository;
+    private RegisterServiceInterface $registerService;
 
     public function __construct(
         ActivationCodeService $activationCode,
         TweetServiceInterface $tweetService,
         TokenServiceInterface $tokenService,
-        UserRepositoryInterface $userRepository
+        RegisterServiceInterface $registerService
     ) {
         parent::__construct($tokenService);
         $this->activationCodeService = $activationCode;
         $this->tweetService = $tweetService;
-        $this->userRepository = $userRepository;
+        $this->registerService = $registerService;
     }
 
     public function register(RegisterRequest $request)
     {
         try {
-            DB::beginTransaction();
-
-            $user = $this->userRepository->create(
-                array_merge(
-                    $request->validated(),
-                    [
-                        'password' => bcrypt($request->get('password')),
-                        'activation_token' => md5(rand(1, 10) . microtime()),
-                    ]
-                )
-            );
+            $user = $this->registerService->register($request->validated());
 
             if (null !== $user) {
                 $activationCode = $this->activationCodeService->generate($user);
+
                 $user->notify(new ActivateSignup($user, $activationCode));
                 $this->tweetService->loadTweets($user->id, 20);
             }
-
-            DB::commit();
 
             return response()->json(
                 [
@@ -66,9 +53,6 @@ class RegisterController extends AuthController
                 ]
             );
         } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-
             return response()->json(
                 [
                     'status' => 'error',

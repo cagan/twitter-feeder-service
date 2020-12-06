@@ -6,9 +6,6 @@ use App\Http\Requests\UpdateTweetRequest;
 use App\Http\Resources\TweetCollection;
 use App\Http\Resources\TweetResource;
 use App\Models\Tweet;
-use App\Repositories\TweetRepository;
-use App\Repositories\TweetRepositoryInterface;
-use App\Repositories\UserRepositoryInterface;
 use App\Services\TweetServiceInterface;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,50 +13,47 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class TweetController extends Controller
 {
 
-    private TweetRepositoryInterface $tweetRepository;
+    private TweetServiceInterface $tweetService;
 
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(TweetRepositoryInterface $tweetRepository, UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        TweetServiceInterface $tweetService
+    ) {
         $this->middleware('auth:api');
-        $this->tweetRepository = $tweetRepository;
-        $this->userRepository = $userRepository;
+        $this->tweetService = $tweetService;
     }
 
     public function index(Request $request)
     {
         $userId = $request->query('userId');
+        $page = $request->query('page') ?: 1;
 
-        // If the user doesn't enters userId, we will show all the tweets in the system.
         if (!$userId) {
-            $tweets = $this->tweetRepository->getAllTweets();
+            $tweets = $this->tweetService->getAllTweets($page);
 
             return new TweetCollection($tweets);
         }
 
-        $user = $this->userRepository->findById($userId);
+        try {
+            $tweets = $this->tweetService->getAllTweetsByUserId($userId, $page);
 
-        if (!$user) {
+            return new TweetCollection($tweets);
+        } catch (\Exception $e) {
             return response()->json(
                 [
                     'status' => 'error',
-                    'message' => 'User not found with that userId',
-                ],
-                JsonResponse::HTTP_BAD_REQUEST
+                    'message' => $e->getMessage(),
+                ]
             );
         }
-
-        $tweets = $this->tweetRepository->getTweetByUserId($user->id);
-
-        return new TweetCollection($tweets);
     }
 
-    public function show(int $tweetId, TweetRepository $repository)
+    public function show(int $tweetId)
     {
-        $tweet = $repository->findById($tweetId);
+        try {
+            $tweet = $this->tweetService->getTweetById($tweetId);
 
-        if (!$tweet) {
+            return new TweetResource($tweet);
+        } catch (\Exception $e) {
             return response()->json(
                 [
                     'status' => 'error',
@@ -68,8 +62,6 @@ class TweetController extends Controller
                 JsonResponse::HTTP_BAD_REQUEST
             );
         }
-
-        return new TweetResource($tweet);
     }
 
     public function update(Tweet $tweet, UpdateTweetRequest $request)
@@ -77,7 +69,7 @@ class TweetController extends Controller
         $validated = $request->validated();
         $this->authorize('update', $tweet);
 
-        $updated = $this->tweetRepository->update($tweet->id, $validated);
+        $updated = $this->tweetService->updateTweet($tweet->id, $validated);
 
         if ($updated) {
             return response()->json(
@@ -124,4 +116,5 @@ class TweetController extends Controller
             JsonResponse::HTTP_INTERNAL_SERVER_ERROR
         );
     }
+
 }

@@ -50,15 +50,15 @@ class ActivationCodeService
             return false;
         }
 
-        $userActivationCode = $this->activationCode->where('activation_code', $activationCode)->first();
-        $user = User::where('id', $userId)->where('email_active', 0)->first();
-
-        if (!$user) {
-            return false;
-        }
-
         try {
             DB::beginTransaction();
+
+            $userActivationCode = $this->activationCode->where('activation_code', $activationCode)->first();
+            $user = User::where('id', $userId)->where('email_active', 0)->first();
+
+            if (!$user) {
+                return false;
+            }
 
             $user->update(
                 [
