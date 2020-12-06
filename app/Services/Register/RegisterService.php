@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace App\Services;
+namespace App\Services\Register;
 
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
@@ -44,5 +44,4 @@ class RegisterService implements RegisterServiceInterface
             throw new \Exception('Can not register new user');
         }
     }
-
 }

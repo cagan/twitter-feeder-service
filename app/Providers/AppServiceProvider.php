@@ -9,11 +9,13 @@ use App\Repositories\TweetRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\Repositories\UserRepositoryInterface;
 use App\Services\JwtTokenService;
-use App\Services\RegisterService;
-use App\Services\RegisterServiceInterface;
+use App\Services\Login\JwtLoginService;
+use App\Services\Login\LoginServiceInterface;
+use App\Services\Register\RegisterService;
+use App\Services\Register\RegisterServiceInterface;
 use App\Services\TokenServiceInterface;
-use App\Services\TweetService;
-use App\Services\TweetServiceInterface;
+use App\Services\Tweet\TweetService;
+use App\Services\Tweet\TweetServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -45,5 +47,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TweetRepositoryInterface::class, TweetRepository::class);
         $this->app->bind(RegisterServiceInterface::class, RegisterService::class);
+        $this->app->bind(LoginServiceInterface::class, JwtLoginService::class);
     }
 }

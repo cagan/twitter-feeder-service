@@ -6,7 +6,7 @@ use App\Http\Requests\UpdateTweetRequest;
 use App\Http\Resources\TweetCollection;
 use App\Http\Resources\TweetResource;
 use App\Models\Tweet;
-use App\Services\TweetServiceInterface;
+use App\Services\Tweet\TweetServiceInterface;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -116,5 +116,4 @@ class TweetController extends Controller
             JsonResponse::HTTP_INTERNAL_SERVER_ERROR
         );
     }
-
 }

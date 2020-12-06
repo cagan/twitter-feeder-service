@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Services\Tweet;
 
 use App\Http\Clients\ClientInterface;
 use App\Repositories\TweetRepositoryInterface;
@@ -110,5 +110,4 @@ class TweetService implements TweetServiceInterface
         \Cache::clear();
         return $this->tweetRepository->update($tweetId, $values);
     }
-
 }
