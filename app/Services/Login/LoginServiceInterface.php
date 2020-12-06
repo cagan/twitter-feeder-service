@@ -8,5 +8,4 @@ interface LoginServiceInterface
 {
 
     public function login(array $userData);
-
 }

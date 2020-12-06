@@ -78,5 +78,4 @@ class JwtLoginService implements LoginServiceInterface
 
         return null;
     }
-
 }

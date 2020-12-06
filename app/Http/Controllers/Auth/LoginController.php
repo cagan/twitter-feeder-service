@@ -46,5 +46,4 @@ class LoginController extends AuthController
             );
         }
     }
-
 }
